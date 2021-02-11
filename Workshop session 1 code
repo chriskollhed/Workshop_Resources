@@ -1,0 +1,145 @@
+[BAS: create dev space, enter commands in terminal]
+
+1-establish SSH connection to git (BAS Terminal)
+ssh-keygen -t ed25519 -C "[enter-your-emailadress]"
+cd .ssh
+ls -lisa
+cat id_ed25519.pub
+cat [enter-your-public-key-string]
+
+[paste publik key to git: create new SSH
+BAS: create dev project]
+
+2-create repository
+echo "# HCWorkshop" >> README.md
+git init
+git add README.md
+[git ignore, then:]
+git add .
+git commit -m "first commit"
+git config --global user.email "christopher.kollhed@sap.com"
+git config --global user.name "chriskollhed"
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:chriskollhed/HCWorkshop.git
+git push -u origin main
+[type yes]
+
+2-1 adjust .gitignore
+**/node_modules/**
+.env*
+--only for Mac
+.DS_Store
+
+3 - hdbmigrationtable
+
+== version = 1
+
+column table "TLOG_F_C" (
+   "Index"  NVARCHAR(200),
+   "ClientID"  NVARCHAR(200),
+   "Name"  NVARCHAR(200),
+   "Gender"  NVARCHAR(200),
+   "Birthdate"  DATE,
+   "Occupation"  NVARCHAR(200),
+   "City"  NVARCHAR(200),
+   "City_"  NVARCHAR(200),
+   "latitude"  NVARCHAR(200),
+   "longitude"  NVARCHAR(200),
+   "OrderID"  NVARCHAR(200),
+   "OrderDate"  DATE,
+   "OrderYear"  INTEGER,
+   "OrderPrice"  DECIMAL(10, 2),
+   "OrderPay"  DECIMAL(10, 2),
+   "No.OrderItems"  INTEGER,
+   "ProductName"  NVARCHAR(200),
+   "ItemCategory"  NVARCHAR(200),
+   "ItemPrice"  DECIMAL(10, 2),
+   "ItemSoldPrice"  DECIMAL(10, 2),
+   "ItemDiscount"  DECIMAL(10, 2),
+   "No.Item"  INTEGER,	
+   "ItemTotalSoldPrice"  DECIMAL(10, 2)
+)
+
+5 - add a row of data to this table
+
+INSERT INTO "WORKSHOP_HDI_DB_1"."TLOG_F_C" VALUES(
+	'001'/*Index <NVARCHAR(200)>*/,
+	''/*ClientID <NVARCHAR(200)>*/,
+	''/*Name <NVARCHAR(200)>*/,
+	''/*Gender <NVARCHAR(200)>*/,
+	''/*Birthdate <DATE>*/,
+	''/*Occupation <NVARCHAR(200)>*/,
+	''/*City <NVARCHAR(200)>*/,
+	''/*City_ <NVARCHAR(200)>*/,
+	''/*latitude <NVARCHAR(200)>*/,
+	''/*longitude <NVARCHAR(200)>*/,
+	''/*OrderID <NVARCHAR(200)>*/,
+	''/*OrderDate <DATE>*/,
+	2020/*OrderYear <INTEGER>*/,
+	123/*OrderPrice <DECIMAL>*/,
+	1/*OrderPay <DECIMAL>*/,
+	1/*No.OrderItems <INTEGER>*/,
+	''/*ProductName <NVARCHAR(200)>*/,
+	''/*ItemCategory <NVARCHAR(200)>*/,
+	123/*ItemPrice <DECIMAL>*/,
+	123/*ItemSoldPrice <DECIMAL>*/,
+	1/*ItemDiscount <DECIMAL>*/,
+	1/*No.Item <INTEGER>*/,
+	1/*ItemTotalSoldPrice <DECIMAL>*/
+)
+
+6 - role 1: SELECT_ON_TLOG_F_C_WITH_GRANT.hdbrole
+
+{
+  "role": {
+    "name": "SELECT_ON_TLOG_F_C_WITH_GRANT#",
+    "object_privileges": [
+      {
+        "name": "TLOG_F_C",
+        "type": "TABLE",
+        "privileges_with_grant_option": [
+          "SELECT"
+        ]
+      }
+    ]
+  }
+}
+
+7 - role 2: SELECT_ON_TLOG_F_C.hdbrole
+
+{
+  "role": {
+    "name": "SELECT_ON_TLOG_F_C",
+    "object_privileges": [
+      {
+        "name": "TLOG_F_C",
+        "type": "TABLE",
+        "privileges": [
+          "SELECT"
+        ]
+      }
+    ]
+  }
+} 
+
+
+8 - role 3: LOAD_TLOG_F_C.hdbrole
+
+{
+  "role": {
+    "name": "LOAD_TLOG_F_C",
+    "object_privileges": [
+      {
+        "name": "TLOG_F_C",
+        "type": "TABLE",
+        "privileges": [
+          "DELETE",
+          "SELECT",
+          "UPDATE",
+          "INSERT"
+        ]
+      }
+    ]
+  }
+}
